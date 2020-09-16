@@ -5,6 +5,7 @@ namespace Hcode;
 class Model
 {
   private $values = [];
+  /**Função responsável por retornar os dados do banco de acordo o methodo */
   public function __call($name, $args)
   {
     $method = substr($name, 0, 3);

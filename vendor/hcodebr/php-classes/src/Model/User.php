@@ -9,6 +9,8 @@ class User extends Model
 {
 
   const SESSION = "User";
+
+  /** Função responsável por  criar o login do usuário */
   public static function login($login, $password)
   {
     $sql = new Sql();
@@ -28,6 +30,7 @@ class User extends Model
       throw new \Exception("Usuário inexistente ou senha inválida.");
     }
   }
+  /**Função responsável por verificar se o usuário tem sessão ativa e se é administrador */
   public static function verifyLogin($inadmin = true)
   {
     if (
@@ -42,15 +45,44 @@ class User extends Model
       exit;
     }
   }
+  /**
+   * Função responsável por encerrar a sessão e deslogar o usuário
+   */
   public static function logout()
   {
     $_SESSION[User::SESSION] = NULL;
   }
+
+  /**Função responsável por listar todos os usuários na tela de admin */
   public static function listAll()
   {
 
     $sql = new Sql();
 
     return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
+  }
+  /** Função responsável por cadastrar usuário no banco de dados utilizando a procedure sp_users_save */
+
+  public function save()
+  {
+    $sql = new Sql();
+    $results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword,:desemail,:nrphone, :inadmin)", array(
+      ":desperson" => $this->getdesperson(),
+      ":deslogin" => $this->getdeslogin(),
+      ":despassword" => $this->getdespassword(),
+      ":desemail" => $this->getdesemail(),
+      ":nrphone" => $this->getnrphone(),
+      ":inadmin" => $this->getinadmin()
+    ));
+    $this->setData($results[0]);
+  }
+  /**Função responsável por retornar os dados de um determinado usuário para realizar atualização */
+  public function get($iduser)
+  {
+    $sql = new Sql();
+    $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING (idperson) WHERE a.iduser = :iduser", array(
+      "iduser" => $iduser
+    ));
+    $this->setData($results[0]);
   }
 }
