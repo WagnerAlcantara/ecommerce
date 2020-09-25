@@ -31,12 +31,17 @@ class Page
     $this->setData($this->options["data"]);
     if ($this->options["header"] === true) $this->tpl->draw("header");
   }
-  private function setData($data = array())
+
+  private function setData($data = [])
   {
-    foreach ($this->options["data"] as $key => $value) {
+    foreach ($data as $key => $value) {
       $this->tpl->assign($key, $value);
     }
   }
+
+
+
+
   public function setTpl($name, $data = array(), $returnHTML = false)
   {
     $this->setData($data);

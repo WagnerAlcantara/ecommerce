@@ -53,6 +53,7 @@ $app->get('/admin/logout', function () {
 $app->get('/admin/users', function () {
 	User::verifyLogin();
 	$users = User::listAll();
+
 	$page = new PageAdmin();
 	$page->setTpl("users", array("users" => $users));
 });
@@ -102,7 +103,9 @@ $app->post('/admin/users/create', function () {
 	exit;
 });
 
-/**Rota responsável por setar o id do usuário */
+
+
+/**Rota responsável por setar o id do usuários */
 $app->post('/admin/users/:iduser', function ($iduser) {
 	User::verifyLogin();
 });
