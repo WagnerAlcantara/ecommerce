@@ -68,6 +68,11 @@ $app->get('/admin/users/create', function () {
 /** Rota responsável por deletar usuário */
 $app->get('/admin/users/:iduser/delete', function ($iduser) {
 	User::verifyLogin();
+	$user = new User();
+	$user->get((int) $iduser);
+	$user->delete();
+	header("Location: /admin/users");
+	exit;
 });
 
 /** Rota responsável por retornar os dados do usuário para edição */
@@ -108,6 +113,13 @@ $app->post('/admin/users/create', function () {
 /**Rota responsável por setar o id do usuários */
 $app->post('/admin/users/:iduser', function ($iduser) {
 	User::verifyLogin();
+	$user = new User();
+	$_POST["inadmin"] = (isset($_POST["inadmin"]) ? 1 : 0);
+	$user->get((int) $iduser);
+	$user->setData($_POST);
+	$user->update();
+	header("Location: /admin/users");
+	exit;
 });
 
 
