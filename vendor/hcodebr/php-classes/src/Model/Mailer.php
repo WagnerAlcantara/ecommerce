@@ -2,6 +2,9 @@
 
 namespace Hcode;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+
 use Rain\Tpl;
 
 class Mailer
