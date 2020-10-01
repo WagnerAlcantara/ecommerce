@@ -2,24 +2,22 @@
 
 namespace Hcode;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-
 use Rain\Tpl;
 
 class Mailer
 {
-  const USERNAME = "wagner.analise@gmail.com";
-  const PASSWORD = "W@gner3755";
-  const NAME_FROM = "HCODE STORE";
-  private $mail;
 
+  const USERNAME = "seu email";
+  const PASSWORD = "sua senha";
+  const NAME_FROM = "Hcode Store";
+
+  private $mail;
 
   public function __construct($toAddress, $toName, $subject, $tplName, $data = array())
   {
 
     $config = array(
-      "tpl_dir"       => $_SERVER["DOCUMENT_ROOT"] . "/views/email",
+      "tpl_dir"       => $_SERVER["DOCUMENT_ROOT"] . "/views/email/",
       "cache_dir"     => $_SERVER["DOCUMENT_ROOT"] . "/views-cache/",
       "debug"         => false
     );
@@ -27,28 +25,29 @@ class Mailer
     Tpl::configure($config);
 
     $tpl = new Tpl;
+
     foreach ($data as $key => $value) {
       $tpl->assign($key, $value);
     }
+
     $html = $tpl->draw($tplName, true);
 
-    //Create a new PHPMailer instance
     $this->mail = new \PHPMailer;
-
 
     //Tell PHPMailer to use SMTP
     $this->mail->isSMTP();
+
     //Enable SMTP debugging
     // 0 = off (for production use)
     // 1 = client messages
     // 2 = client and server messages
-    $this->mail->SMTPDebug = 2;
+    $this->mail->SMTPDebug = 0;
 
     //Ask for HTML-friendly debug output
     $this->mail->Debugoutput = 'html';
 
     //Set the hostname of the mail server
-    $this->mail->Host = 'smtp.gmail.com';
+    $this->mail->Host = 'outlook.office365.com';
     // use
     // $this->mail->Host = gethostbyname('smtp.gmail.com');
     // if your network does not support SMTP over IPv6
@@ -69,10 +68,10 @@ class Mailer
     $this->mail->Password = Mailer::PASSWORD;
 
     //Set who the message is to be sent from
-    $this->mail->SetFrom(Mailer::USERNAME, Mailer::NAME_FROM);
+    $this->mail->setFrom(Mailer::USERNAME, Mailer::NAME_FROM);
 
     //Set an alternative reply-to address
-    $this->mail->addReplyTo('', 'First Last');
+    //$this->mail->addReplyTo('replyto@example.com', 'First Last');
 
     //Set who the message is to be sent to
     $this->mail->addAddress($toAddress, $toName);
@@ -88,13 +87,13 @@ class Mailer
     $this->mail->AltBody = 'This is a plain-text message body';
 
     //Attach an image file
-    // $this->mail->addAttachment('images/phpmailer_mini.png');
-
-    //send the message, check for errors
+    //$mail->addAttachment('images/phpmailer_mini.png');
 
   }
+
   public function send()
   {
-    return $this->email->send();
+
+    return $this->mail->send();
   }
 }
